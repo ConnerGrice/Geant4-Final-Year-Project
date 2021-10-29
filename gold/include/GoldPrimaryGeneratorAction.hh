@@ -13,7 +13,7 @@ class GoldPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction{
 	public:
 		GoldPrimaryGeneratorAction(
 				const G4String& particleName = "alpha",
-				G4double energy = 10*MeV,
+				G4double energy = 30*MeV,
 				G4ThreeVector position = G4ThreeVector(-5*cm,0,0),
 				G4ParticleMomentum momentumDir = G4ParticleMomentum(1,0,0));
 		virtual ~GoldPrimaryGeneratorAction();

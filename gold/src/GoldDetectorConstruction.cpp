@@ -1,15 +1,20 @@
 #include "GoldDetectorConstruction.hh"
+#include "GoldSensitiveDetector.hh"
 
 #include "G4Box.hh"
 #include "G4Tubs.hh"
 #include "G4NistManager.hh"
+#include "G4Transform3D.hh"
 #include "G4PVPlacement.hh"
 #include "G4PVReplica.hh"
+#include "G4PVDivision.hh"
 #include "G4LogicalVolume.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4RotationMatrix.hh"
+#include "G4SDManager.hh"
 
-GoldDetectorConstuction::GoldDetectorConstuction() : G4VUserDetectorConstruction(){
+GoldDetectorConstuction::GoldDetectorConstuction() : G4VUserDetectorConstruction(),
+logicDet(0){
 
 }
 
@@ -25,6 +30,7 @@ G4VPhysicalVolume* GoldDetectorConstuction::Construct(){
 	//Defines some materials
 	G4Material* air = nist->FindOrBuildMaterial("G4_AIR");
 	G4Material* gold = nist->FindOrBuildMaterial("G4_Ag");
+	G4Material* lead = nist->FindOrBuildMaterial("G4_Pb");
 
 	G4bool checkOverlaps = true;
 
@@ -68,44 +74,42 @@ G4VPhysicalVolume* GoldDetectorConstuction::Construct(){
 					false,
 					0);
 //Detector=======================================================================================
-	//Tube dimensions
-	G4double inner = 8*cm;		//Inner radius
-	G4double outer = 8.1*cm;	//Outer radius
-	G4double halfHeight = 10*cm;//Half the height
-	G4double startPhi = 0;		//Starting angle
-	G4double endPhi = 2*M_PI;	//Ending angle
 
-	//Rotation matrix rotating 90 degrees in the X axis
-	G4RotationMatrix* rotationMatrixX = new G4RotationMatrix();
-	rotationMatrixX->rotateX(90*deg);
+	G4double numOfSegments = 360;
+
+
+	//Tube dimensions
+	G4double inner = 5.5*cm;		//Inner radius
+	G4double outer = 5.6*cm;	//Outer radius
+	G4double halfHeight = 1.5*cm;//Half the height
+	G4double startPhi = 0;		//Starting angle
+	G4double endPhi = (2*M_PI)/numOfSegments;	//Ending angle
+
+	G4ThreeVector x = G4ThreeVector(1,0,0);
+	G4ThreeVector z = G4ThreeVector(0,0,1);
 
 	//Whole tube object
 	G4Tubs* solidDet = new G4Tubs("Detector",inner,outer,halfHeight,startPhi,endPhi);
-	G4LogicalVolume* logicDet = new G4LogicalVolume(solidDet,air,"Detector");
-	new G4PVPlacement(
-					rotationMatrixX,
-					G4ThreeVector(0,0,0),
-					"Detector",
-					logicDet,
-					physicalWorld,
-					false,
-					0);
+	logicDet = new G4LogicalVolume(solidDet,lead,"Detector");
 
-	//Subdivided tube
-	G4double phiSegment = endPhi/360;	//each wedge segment angle
-
-	G4VSolid* dividedDet = new G4Tubs("DivivedDetector",inner,outer,halfHeight,-phiSegment/2*rad,phiSegment*rad);
-	G4LogicalVolume* logicDividedDet = new G4LogicalVolume(dividedDet,air,"DividedDetector");
-	new G4PVReplica(
-				"DividedDetector",	//Object name
-				logicDividedDet,	//Logical object
-				logicDet,			//Whole logical object
-				kPhi,				//axis of divisions
-				360,				//number of replicas
-				phiSegment);		//dimension of each segment
+	for(G4int i=0;i<numOfSegments;i++){
+		G4Transform3D rotation = G4Rotate3D(90*deg,x)*G4Rotate3D(i*(endPhi)*rad,z);
+		new G4PVPlacement(
+						rotation,
+						"Detector",
+						logicDet,
+						physicalWorld,
+						false,
+						i,
+						checkOverlaps);
+	}
 
 	return physicalWorld;
+}
 
+void GoldDetectorConstuction::ConstructSDandField(){
+	GoldSensitiveDetector* sensDet = new GoldSensitiveDetector("SensitiveDetector");
+	logicDet->SetSensitiveDetector(sensDet);
 }
 
 

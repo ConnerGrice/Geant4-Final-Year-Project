@@ -10,8 +10,10 @@ class GoldDetectorConstuction : public G4VUserDetectorConstruction{
 	public:
 		GoldDetectorConstuction();
 		virtual ~GoldDetectorConstuction();
-	public:
 		virtual G4VPhysicalVolume* Construct();
+	private:
+		G4LogicalVolume* logicDet;
+		virtual void ConstructSDandField();
 };
 
 #endif /* INCLUDE_GOLDDETECTORCONSTRUCTION_HH_ */
