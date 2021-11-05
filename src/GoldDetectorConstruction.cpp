@@ -100,12 +100,13 @@ G4VPhysicalVolume* GoldDetectorConstuction::Construct(){
 						logicDet,
 						physicalWorld,
 						false,
-						i,
+						i+1,
 						checkOverlaps);
 	}
 
 	return physicalWorld;
 }
+
 
 void GoldDetectorConstuction::ConstructSDandField(){
 	GoldSensitiveDetector* sensDet = new GoldSensitiveDetector("SensitiveDetector");
