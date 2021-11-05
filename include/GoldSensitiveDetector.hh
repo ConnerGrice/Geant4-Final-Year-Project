@@ -2,7 +2,6 @@
 #define INCLUDE_GOLDSENSITIVEDETECTOR_HH_
 
 #include "G4VSensitiveDetector.hh"
-
 //class G4TouchableHistory;
 //class G4Step;
 
