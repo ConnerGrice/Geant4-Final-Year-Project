@@ -15,7 +15,7 @@ void GoldRunAction::BeginOfRunAction(const G4Run*){
 
 	G4AnalysisManager* anaMan = G4AnalysisManager::Instance();
 	anaMan->SetVerboseLevel(2);
-	anaMan->OpenFile("output.root");
+	anaMan->OpenFile("output");
 	anaMan->CreateNtuple("Gold","Hits");
 	anaMan->CreateNtupleDColumn("Angle");
 	anaMan->FinishNtuple(0);

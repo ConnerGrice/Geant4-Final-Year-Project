@@ -1,6 +1,7 @@
 #include "GoldSensitiveDetector.hh"
 
 #include "g4root.hh"
+#include "G4RunManager.hh"
 
 GoldSensitiveDetector::GoldSensitiveDetector(G4String name) : G4VSensitiveDetector(name){
 
@@ -40,6 +41,7 @@ G4bool GoldSensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*){
 
 	//Fills in the data to the root file
 	G4AnalysisManager* anaMan = G4AnalysisManager::Instance();
+
 	anaMan->FillNtupleDColumn(0,angle);
 	anaMan->AddNtupleRow();
 
