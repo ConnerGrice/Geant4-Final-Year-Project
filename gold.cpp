@@ -29,17 +29,24 @@ int main(int argc,char** argv)
   //get the pointer to the UI manager
   G4UImanager* UI = G4UImanager::GetUIpointer();
 
-  //UIExecutive is the interactive visualizer (i think)
-  G4UIExecutive* session = new G4UIExecutive(argc,argv);
+  //Initializes UI Executive object
+  G4UIExecutive* session = nullptr;
 
-  //This allows for the use of my init_vis.mac file to initiate the scene
-  G4String command = "/control/execute ";
-  G4String macro = argv[1];
-  UI->ApplyCommand(command+macro);
+  //fills session object if no arguments are given at command line
+  if (argc == 1){ session = new G4UIExecutive(argc,argv);}
 
-  session->SessionStart();
-  delete session;
-
+  //If session is empty, run in batch mode
+  if (! session){
+	  G4String command = "/control/execute ";
+	  G4String macro = argv[1];
+	  UI->ApplyCommand(command+macro);
+  }
+  //else, run init_vis macro and start the visualizer
+  else{
+	  UI->ApplyCommand("/control/execute init_vis.mac");
+	  session->SessionStart();
+	  delete session;
+  }
   // job termination
   delete runManager;
   delete visManager;

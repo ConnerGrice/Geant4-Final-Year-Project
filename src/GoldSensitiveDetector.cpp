@@ -33,7 +33,7 @@ G4bool GoldSensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*){
 	G4VPhysicalVolume* physVol = touchable->GetVolume();
 	G4ThreeVector posDetector  = physVol->GetTranslation();
 
-	G4cout<<"Detector Index: "<< copyNo<<G4endl;
+	//G4cout<<"Detector Index: "<< copyNo<<G4endl;
 
 	//Maps copy number onto the angle corresponding to the centre of that segment
 	G4double angle = copyNo-0.5;
