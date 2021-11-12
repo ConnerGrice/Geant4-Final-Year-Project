@@ -36,7 +36,7 @@ G4bool GoldSensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*){
 
 	//G4cout<<"Detector Index: "<< copyNo<<G4endl;
 
-	//Maps copy number onto the angle corresponding to the centre of that segment
+	//Maps copy number onto the angle corresponding to the center of that segment
 	G4double angle = copyNo-0.5;
 
 	//Fills in the data to the root file

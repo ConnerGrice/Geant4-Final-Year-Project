@@ -77,7 +77,6 @@ G4VPhysicalVolume* GoldDetectorConstuction::Construct(){
 
 	G4double numOfSegments = 360;
 
-
 	//Tube dimensions
 	G4double inner = 5.5*cm;		//Inner radius
 	G4double outer = 5.6*cm;	//Outer radius
@@ -93,14 +92,14 @@ G4VPhysicalVolume* GoldDetectorConstuction::Construct(){
 	logicDet = new G4LogicalVolume(solidDet,lead,"Detector");
 
 	for(G4int i=0;i<numOfSegments;i++){
-		G4Transform3D rotation = G4Rotate3D(90*deg,x)*G4Rotate3D(i*(endPhi)*rad,z);
+		G4Transform3D rotation = G4Rotate3D(90*deg,x)*G4Rotate3D(M_PI+(i*(endPhi))*rad,z);
 		new G4PVPlacement(
 						rotation,
 						"Detector",
 						logicDet,
 						physicalWorld,
 						false,
-						i+1,
+						-180+i,
 						checkOverlaps);
 	}
 
