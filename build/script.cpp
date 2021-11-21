@@ -63,5 +63,6 @@ void script() {
 	cv->SetLogy();
 	//Saves plot
 	cv->SaveAs("LogHist.root");
+	cv->Print("LogHist.eps");
 	
 }
